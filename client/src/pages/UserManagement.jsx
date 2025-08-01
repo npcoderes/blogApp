@@ -137,18 +137,23 @@ const UserManagement = () => {
       title: 'User',
       key: 'user',
       render: (_, record) => (
-        <Space>
-          <Avatar 
-            src={record.profile_picture} 
-            icon={<UserOutlined />}
-            size={40}
-          />
-          <div>
-            <div style={{ fontWeight: 'bold' }}>{record.username}</div>
-            <div style={{ color: '#666', fontSize: '12px' }}>{record.user_email}</div>
-          </div>
+        <Space direction="vertical" size="small" style={{ display: 'flex' }}>
+          <Space>
+            <Avatar 
+              src={record.profile_picture} 
+              icon={<UserOutlined />}
+              size={40}
+            />
+            <div>
+              <div style={{ fontWeight: 'bold', fontSize: '14px' }}>{record.username}</div>
+              <div style={{ color: '#666', fontSize: '12px', wordBreak: 'break-all' }}>
+                {record.user_email}
+              </div>
+            </div>
+          </Space>
         </Space>
       ),
+      responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
       title: 'Role',
@@ -159,18 +164,21 @@ const UserManagement = () => {
           {role?.toUpperCase() || 'UNKNOWN'}
         </Tag>
       ),
+      responsive: ['sm', 'md', 'lg', 'xl'],
     },
     {
       title: 'Location',
       dataIndex: 'location',
       key: 'location',
       render: (location) => location || '-',
+      responsive: ['md', 'lg', 'xl'],
     },
     {
       title: 'Joined',
       dataIndex: 'created_at',
       key: 'created_at',
       render: (date) => new Date(date).toLocaleDateString(),
+      responsive: ['lg', 'xl'],
     },
     {
       title: 'Actions',
@@ -178,7 +186,7 @@ const UserManagement = () => {
       render: (_, record) => (
         <Select
           defaultValue={record.role_name}
-          style={{ width: 120 }}
+          style={{ width: '100%', minWidth: '100px' }}
           onChange={(value) => handleRoleChange(record.user_id, value)}
           loading={updatingRole === record.user_id}
         >
@@ -187,6 +195,7 @@ const UserManagement = () => {
           <Option value="admin">Admin</Option>
         </Select>
       ),
+      responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -199,49 +208,50 @@ const UserManagement = () => {
   }
 
   return (
-    <div style={{ padding: '24px' }}>
-      <Title level={2} style={{ marginBottom: '24px' }}>
+    <div style={{ padding: '12px 16px' }}>
+      <Title level={2} style={{ marginBottom: '16px', fontSize: '20px' }}>
         <TeamOutlined /> User Management
       </Title>
 
       {/* Statistics Cards */}
-      <Row gutter={16} style={{ marginBottom: '24px' }}>
-        <Col span={6}>
-          <Card>
+      <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Card size="small">
             <Statistic
               title="Total Users"
               value={stats.total}
               prefix={<UserOutlined />}
+              valueStyle={{ fontSize: '18px' }}
             />
           </Card>
         </Col>
-        <Col span={6}>
-          <Card>
+        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Card size="small">
             <Statistic
               title="Admins"
               value={stats.admin}
               prefix={<CrownOutlined />}
-              valueStyle={{ color: '#cf1322' }}
+              valueStyle={{ color: '#cf1322', fontSize: '18px' }}
             />
           </Card>
         </Col>
-        <Col span={6}>
-          <Card>
+        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Card size="small">
             <Statistic
               title="Authors"
               value={stats.author}
               prefix={<EditOutlined />}
-              valueStyle={{ color: '#1890ff' }}
+              valueStyle={{ color: '#1890ff', fontSize: '18px' }}
             />
           </Card>
         </Col>
-        <Col span={6}>
-          <Card>
+        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Card size="small">
             <Statistic
               title="Readers"
               value={stats.reader}
               prefix={<BookOutlined />}
-              valueStyle={{ color: '#52c41a' }}
+              valueStyle={{ color: '#52c41a', fontSize: '18px' }}
             />
           </Card>
         </Col>
@@ -254,11 +264,14 @@ const UserManagement = () => {
           dataSource={users}
           rowKey="user_id"
           loading={loading}
+          scroll={{ x: 800 }}
           pagination={{
             pageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => `Total ${total} users`,
+            responsive: true,
+            size: 'small',
           }}
         />
       </Card>
