@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: ["https://blog-app-front-one.vercel.app/", "http://localhost:5173"],
+    origin: "*",
     credentials: true,
   })
 );
