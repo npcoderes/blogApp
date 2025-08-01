@@ -312,20 +312,20 @@ const postsSlice = createSlice({
         const { postId, likeCount, userLiked } = action.payload;
         
         // Update public posts
-        const publicPost = state.publicPosts.find(post => post.id === postId);
+        const publicPost = state.publicPosts.find(post => post.id === postId || post.post_id === postId);
         if (publicPost) {
           publicPost.like_count = likeCount;
           publicPost.user_liked = userLiked;
         }
         
         // Update current post if it matches
-        if (state.currentPost && state.currentPost.id === postId) {
+        if (state.currentPost && (state.currentPost.id === postId || state.currentPost.post_id === postId)) {
           state.currentPost.like_count = likeCount;
           state.currentPost.user_liked = userLiked;
         }
         
         // Update author posts
-        const authorPost = state.authorPosts.find(post => post.id === postId);
+        const authorPost = state.authorPosts.find(post => post.id === postId || post.post_id === postId);
         if (authorPost) {
           authorPost.like_count = likeCount;
           authorPost.user_liked = userLiked;
