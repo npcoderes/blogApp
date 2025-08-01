@@ -218,7 +218,7 @@ const commentsSlice = createSlice({
       .addCase(toggleCommentLike.fulfilled, (state, action) => {
         state.loading.like = false;
         const response = action.payload;
-        const { liked, likeCount } = response;
+        const { liked, likeCount, dislikeCount } = response;
         
         // We need to get the comment ID from the action meta
         const commentId = action.meta.arg.commentId;
@@ -227,7 +227,8 @@ const commentsSlice = createSlice({
         const updateLikeInArray = (comments) => {
           const comment = comments.find(c => c.comment_id === commentId);
           if (comment) {
-            comment.like_count = likeCount;
+            comment.like_count = likeCount || 0;
+            comment.dislike_count = dislikeCount || 0;
             comment.user_liked = liked;
             return true;
           }
