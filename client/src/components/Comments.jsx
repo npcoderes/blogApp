@@ -94,22 +94,33 @@ const CommentForm = ({
   return (
     <div style={{ marginBottom: "16px" }}>
       <TextArea
-        rows={3}
+        rows={window.innerWidth <= 768 ? 2 : 3}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder={placeholder}
-        style={{ marginBottom: "8px" }}
+        style={{ 
+          marginBottom: "8px",
+          fontSize: window.innerWidth <= 768 ? "14px" : "16px"
+        }}
       />
-      <Space>
+      <Space size="small" wrap>
         <Button
           type="primary"
           onClick={handleSubmit}
           loading={loading}
           disabled={!content.trim()}
+          size={window.innerWidth <= 768 ? "small" : "middle"}
         >
           {buttonText}
         </Button>
-        {onSuccess && <Button onClick={() => onSuccess()}>Cancel</Button>}
+        {onSuccess && (
+          <Button 
+            onClick={() => onSuccess()}
+            size={window.innerWidth <= 768 ? "small" : "middle"}
+          >
+            Cancel
+          </Button>
+        )}
       </Space>
     </div>
   );
@@ -198,37 +209,47 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
   };
 
   const commentStyle = {
-    marginLeft: `${level * 24}px`,
-    marginBottom: "16px",
-    padding: "12px",
+    marginLeft: `${Math.min(level * 16, 32)}px`, // Limit nesting on mobile
+    marginBottom: "12px",
+    padding: "8px 12px",
     backgroundColor: level % 2 === 0 ? "#fff" : "#fafafa",
     borderLeft: level > 0 ? "2px solid #e6f7ff" : "none",
     borderRadius: "6px",
     border: "1px solid #f0f0f0",
   };
 
+  // Responsive adjustments
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    commentStyle.marginLeft = `${Math.min(level * 8, 16)}px`;
+    commentStyle.padding = "6px 8px";
+  }
+
   return (
     <div style={commentStyle}>
-      <div style={{ display: "flex", gap: "12px" }}>
-        <Avatar src={comment.profile_picture} size="small">
+      <div style={{ display: "flex", gap: window.innerWidth <= 768 ? "8px" : "12px" }}>
+        <Avatar src={comment.profile_picture} size={window.innerWidth <= 768 ? "small" : "default"}>
           {comment.username?.[0]?.toUpperCase()}
         </Avatar>
 
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0 }}> {/* minWidth: 0 helps with text overflow */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: "8px",
               marginBottom: "8px",
+              flexWrap: "wrap", // Allow wrapping on mobile
             }}
           >
-            <Text strong>{comment.username}</Text>
-            <Text type="secondary" style={{ fontSize: "12px" }}>
+            <Text strong style={{ fontSize: window.innerWidth <= 768 ? "14px" : "16px" }}>
+              {comment.username}
+            </Text>
+            <Text type="secondary" style={{ fontSize: window.innerWidth <= 768 ? "11px" : "12px" }}>
               {new Date(comment.created_at).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
-                year: "numeric",
+                year: window.innerWidth <= 768 ? undefined : "numeric", // Hide year on mobile to save space
               })}
             </Text>
             {comment.is_edited && (
@@ -243,10 +264,10 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
               <TextArea
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                rows={3}
-                style={{ marginBottom: "8px" }}
+                rows={window.innerWidth <= 768 ? 2 : 3}
+                style={{ marginBottom: "8px", fontSize: window.innerWidth <= 768 ? "14px" : "16px" }}
               />
-              <Space>
+              <Space size="small">
                 <Button size="small" type="primary" onClick={handleEdit}>
                   Save
                 </Button>
@@ -257,17 +278,24 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
             </div>
           ) : (
             <div>
-              <Text style={{ whiteSpace: "pre-wrap" }}>{comment.content}</Text>
+              <Text style={{ 
+                whiteSpace: "pre-wrap", 
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
+                wordBreak: "break-word"
+              }}>
+                {comment.content}
+              </Text>
 
               <div
                 style={{
                   marginTop: "8px",
                   display: "flex",
-                  gap: "16px",
+                  gap: window.innerWidth <= 768 ? "8px" : "16px",
                   alignItems: "center",
+                  flexWrap: "wrap",
                 }}
               >
-                <Space size="small">
+                <Space size="small" wrap>
                   <Button
                     type="text"
                     size="small"
@@ -276,6 +304,7 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
                     style={{
                       color: isLiked ? "#1890ff" : undefined,
                       padding: "0 4px",
+                      fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     }}
                     loading={likeLoading}
                   >
@@ -290,6 +319,7 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
                     style={{
                       color: isDisliked ? "#ff4d4f" : undefined,
                       padding: "0 4px",
+                      fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     }}
                     loading={likeLoading}
                   >
@@ -303,9 +333,12 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
                     size="small"
                     icon={<MessageOutlined />}
                     onClick={() => setShowReplyForm(!showReplyForm)}
-                    style={{ padding: "0 4px" }}
+                    style={{ 
+                      padding: "0 4px",
+                      fontSize: window.innerWidth <= 768 ? "12px" : "14px"
+                    }}
                   >
-                    Reply
+                    {window.innerWidth <= 768 ? "" : "Reply"}
                   </Button>
                 )}
 
@@ -316,7 +349,10 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
                       size="small"
                       icon={<EditOutlined />}
                       onClick={() => setIsEditing(true)}
-                      style={{ padding: "0 4px" }}
+                      style={{ 
+                        padding: "0 4px",
+                        fontSize: window.innerWidth <= 768 ? "12px" : "14px"
+                      }}
                     />
                     <Button
                       type="text"
@@ -324,7 +360,10 @@ const CommentItem = ({ comment, level = 0, postId, onCommentAdded }) => {
                       icon={<DeleteOutlined />}
                       onClick={handleDelete}
                       danger
-                      style={{ padding: "0 4px" }}
+                      style={{ 
+                        padding: "0 4px",
+                        fontSize: window.innerWidth <= 768 ? "12px" : "14px"
+                      }}
                     />
                   </Space>
                 )}
@@ -405,7 +444,13 @@ const Comments = ({ postId }) => {
   );
 
   return (
-    <Card title="Comments" style={{ marginTop: "24px" }}>
+    <Card 
+      title="Comments" 
+      style={{ 
+        marginTop: window.innerWidth <= 768 ? "16px" : "24px"
+      }}
+      size={window.innerWidth <= 768 ? "small" : "default"}
+    >
       <CommentForm postId={postId} onCommentAdded={handleCommentAdded} />
 
       <Divider />
