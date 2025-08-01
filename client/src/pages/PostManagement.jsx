@@ -105,43 +105,45 @@ const PostManagement = () => {
       title: 'Post',
       key: 'post',
       render: (_, record) => (
-        <Space>
-          {record.featured_image ? (
-            <Image
-              src={record.featured_image}
-              alt={record.title}
-              width={60}
-              height={40}
-              style={{ objectFit: 'cover', borderRadius: '4px' }}
-              fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3Ik1RnG4W+FgYxN"
-            />
-          ) : (
-            <div style={{
-              width: 60,
-              height: 40,
-              backgroundColor: '#f5f5f5',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '4px'
-            }}>
-              <FileTextOutlined style={{ color: '#ccc' }} />
+        <Space direction="vertical" size="small" style={{ display: 'flex' }}>
+          <Space>
+            {record.featured_image ? (
+              <Image
+                src={record.featured_image}
+                alt={record.title}
+                width={50}
+                height={35}
+                style={{ objectFit: 'cover', borderRadius: '4px' }}
+                fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3Ik1RnG4W+FgYxN"
+              />
+            ) : (
+              <div style={{
+                width: 50,
+                height: 35,
+                backgroundColor: '#f5f5f5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '4px'
+              }}>
+                <FileTextOutlined style={{ color: '#ccc' }} />
+              </div>
+            )}
+            <div style={{ maxWidth: '250px' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '14px' }}>
+                {record.title && record.title.length > 30 ? `${record.title.substring(0, 30)}...` : record.title}
+              </div>
+              <div style={{ color: '#666', fontSize: '12px', wordBreak: 'break-word' }}>
+                {record.content && record.content.replace(/<[^>]*>/g, '').length > 40 
+                  ? `${record.content.replace(/<[^>]*>/g, '').substring(0, 40)}...`
+                  : record.content?.replace(/<[^>]*>/g, '') || ''
+                }
+              </div>
             </div>
-          )}
-          <div style={{ maxWidth: '300px' }}>
-            <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
-              {record.title && record.title.length > 40 ? `${record.title.substring(0, 40)}...` : record.title}
-            </div>
-            <div style={{ color: '#666', fontSize: '12px' }}>
-              {record.content && record.content.replace(/<[^>]*>/g, '').length > 60 
-                ? `${record.content.replace(/<[^>]*>/g, '').substring(0, 60)}...`
-                : record.content?.replace(/<[^>]*>/g, '') || ''
-              }
-            </div>
-          </div>
+          </Space>
         </Space>
       ),
-      width: '40%',
+      responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
       title: 'Author',
@@ -154,11 +156,14 @@ const PostManagement = () => {
             size={32}
           />
           <div>
-            <div style={{ fontWeight: '500' }}>{record.author_name}</div>
-            <div style={{ color: '#666', fontSize: '12px' }}>{record.author_email}</div>
+            <div style={{ fontWeight: '500', fontSize: '14px' }}>{record.author_name}</div>
+            <div style={{ color: '#666', fontSize: '12px', wordBreak: 'break-all' }}>
+              {record.author_email}
+            </div>
           </div>
         </Space>
       ),
+      responsive: ['sm', 'md', 'lg', 'xl'],
     },
     {
       title: 'Created',
@@ -166,12 +171,13 @@ const PostManagement = () => {
       key: 'created_at',
       render: (date) => (
         <div>
-          <div>{new Date(date).toLocaleDateString()}</div>
-          <div style={{ color: '#666', fontSize: '12px' }}>
+          <div style={{ fontSize: '13px' }}>{new Date(date).toLocaleDateString()}</div>
+          <div style={{ color: '#666', fontSize: '11px' }}>
             {new Date(date).toLocaleTimeString()}
           </div>
         </div>
       ),
+      responsive: ['md', 'lg', 'xl'],
     },
     {
       title: 'Actions',
@@ -182,10 +188,12 @@ const PostManagement = () => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => navigate(`/post/${record.slug}`)}
+          style={{ width: '100%', minWidth: '80px' }}
         >
-          View
+          <span className="hidden-xs">View</span>
         </Button>
       ),
+      responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -198,33 +206,35 @@ const PostManagement = () => {
   }
 
   return (
-    <div style={{ padding: '24px' }}>
-      <Title level={2} style={{ marginBottom: '24px' }}>
+    <div style={{ padding: '12px 16px' }}>
+      <Title level={2} style={{ marginBottom: '16px', fontSize: '20px' }}>
         <BookOutlined /> Post Management
       </Title>
 
       {/* Statistics Cards */}
-      <Row gutter={16} style={{ marginBottom: '24px' }}>
-        <Col span={8}>
-          <Card>
+      <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+        <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+          <Card size="small">
             <Statistic
               title="Total Posts"
               value={posts.length}
               prefix={<FileTextOutlined />}
+              valueStyle={{ fontSize: '18px' }}
             />
           </Card>
         </Col>
-        <Col span={8}>
-          <Card>
+        <Col xs={12} sm={8} md={8} lg={8} xl={8}>
+          <Card size="small">
             <Statistic
               title="Active Authors"
               value={authorStats.length}
               prefix={<UserOutlined />}
+              valueStyle={{ fontSize: '18px' }}
             />
           </Card>
         </Col>
-        <Col span={8}>
-          <Card>
+        <Col xs={12} sm={8} md={8} lg={8} xl={8}>
+          <Card size="small">
             <Statistic
               title="Posts This Month"
               value={posts.filter(post => {
@@ -233,20 +243,21 @@ const PostManagement = () => {
                 return postDate.getMonth() === now.getMonth() && postDate.getFullYear() === now.getFullYear();
               }).length}
               prefix={<CalendarOutlined />}
+              valueStyle={{ fontSize: '18px' }}
             />
           </Card>
         </Col>
       </Row>
 
       {/* Search */}
-      <Card style={{ marginBottom: '16px' }}>
+      <Card style={{ marginBottom: '16px' }} size="small">
         <Search
           placeholder="Search posts by title, author, or content..."
           allowClear
           size="large"
           prefix={<SearchOutlined />}
           onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 500 }}
+          style={{ width: '100%', maxWidth: 500 }}
         />
       </Card>
 
@@ -257,11 +268,14 @@ const PostManagement = () => {
           dataSource={filteredPosts}
           rowKey="post_id"
           loading={loading}
+          scroll={{ x: 800 }}
           pagination={{
             pageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => `Total ${total} posts`,
+            responsive: true,
+            size: 'small',
           }}
         />
       </Card>
